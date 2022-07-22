@@ -14,6 +14,7 @@
   - [Log In](#log-in)
   - [Change password](#change-password)
   - [Who Are You?](#who-are-you)
+  - [Date & Time](#date--time)
   - [Who is Logged in?](#who-is-logged-in)
   - [Log Out](#log-out)
   - [Shutdown](#shutdown)
@@ -27,6 +28,7 @@
   - [Renaming Files](#renaming-files)
   - [Delete Files](#delete-files)
 - [Directories](#directories)
+  - [Print the Current Directory](#print-the-current-directory)
   - [The directories . (dot) and .. (dot dot)](#the-directories--dot-and--dot-dot)
   - [Absolute path & Relative path](#absolute-path--relative-path)
   - [Change directory](#change-directory)
@@ -46,14 +48,22 @@
   - [Environment Variables](#environment-variables)
 - [Pipes and Filters](#pipes-and-filters)
   - [The `grep` command](#the-grep-command)
-- [Other commands](#other-commands)
-  - [Print working directory](#print-working-directory)
-  - [Date & Time](#date--time)
+  - [The `sort` command](#the-sort-command)
+- [Processes Management](#processes-management)
+  - [Starting a Process](#starting-a-process)
+    - [Foreground Processes](#foreground-processes)
+    - [Background Processes](#background-processes)
+  - [Listing Running Processes](#listing-running-processes)
+  - [Stopping Processes](#stopping-processes)
+- [Communication](#communication)
+  - [Ping](#ping)
+  - [FTP](#ftp)
+  - [Telnet](#telnet)
 
 ## References
 
-- <https://shell.cyberciti.biz/guide/Main_Page>
 - <https://www.tutorialspoint.com/unix/index.htm>
+- <https://shell.cyberciti.biz/guide/Main_Page>
 - <https://ipwithease.com/linux-vs-unix/>
 - <https://acloudguru.com/blog/engineering/linux-commands-for-beginners-sudo>
 - <https://networkencyclopedia.com/absolute-path/>
@@ -189,6 +199,13 @@ passwd
 whoami   # List the account name associated with the current login
 ```
 
+### Date & Time
+
+```shell
+cal      # Display a calendar
+date     # Display the current date
+```
+
 ### Who is Logged in?
 
 ```shell
@@ -221,10 +238,10 @@ All data in Unix is organized into files. All files are organized into directori
 ### Listing Files
 
 ```shell
-ls
-ls -l
-ls -a
-ls -la
+ls       # List directory contents
+ls -l    # Use a long listing format
+ls -a    # Do not ignore entries starting with .
+ls -la   # Combine -l and -a
 ```
 
 In the `ls -l` listing example, every file line begins with a `d`, `-`. These characters indicate the type of the file that's listed.
@@ -256,8 +273,8 @@ ch04-1.doc   ch040.doc   ch05.doc   ch06-2.doc
 Check out this video of Fireship: <https://www.youtube.com/watch?v=-txKSRn0qeA>
 
 ```shell
-touch filename  # Create a new file
-vi filename     # Open a file for editing, create a new file if it doesn't exist
+touch filename    # Create a new file
+vi filename       # Open a file for editing, create a new file if it doesn't exist
 ```
 
 ### Display Content of a File
@@ -301,6 +318,12 @@ rm filename1 filename2 filename3  # Remove multiple files
 ```
 
 ## Directories
+
+### Print the Current Directory
+
+```shell
+pwd
+```
 
 ### The directories . (dot) and .. (dot dot)
 
@@ -504,17 +527,127 @@ There are various options which you can use along with the grep command −
 | -n | Prints the matched line and its line number. |
 | -i | Case insensitive search. |
 
-## Other commands
-
-### Print working directory
+### The `sort` command
 
 ```shell
-pwd
+sort filename  # Arrange lines of text alphabetically or numerically
 ```
 
-### Date & Time
+The `sort` command arranges lines of text alphabetically by default. There are many options that control the sorting −
+
+| Option | Description |
+| - | - |
+| -f | Sort upper and lowercase together. |
+| -n | Sort numerically, ignores blanks and tabs. |
+| -r | Reverse the order of the lines. |
+| -t | Sort by the time the file was last modified. |
+| +x | Ignore first **x** fields when sorting. |
+
+## Processes Management
+
+Whenever you issue a command in Unix, it creates, or starts, a new process. When you tried out the `ls` command to list the directory contents, you started a process. A process, in simple terms, is an instance of a running program.
+
+The operating system tracks processes through a five-digit ID number known as the **pid** or the process ID. Each process in the system has a unique **pid**.
+
+### Starting a Process
+
+#### Foreground Processes
+
+By default, every process that you start runs in the foreground. It gets its input from the keyboard and sends its output to the screen.
+
+The process runs in the foreground, the output is directed to my screen, and if the command wants any input, it waits for it from the keyboard.
+
+While a program is running in the foreground and is time-consuming, no other commands can be run (start any other processes) because the prompt would not be available until the program finishes processing and comes out.
+
+#### Background Processes
+
+A background process runs without being connected to your keyboard. If the background process requires any keyboard input, it waits.
+
+The advantage of running a process in the background is that you can run other commands; you do not have to wait until it completes to start another!
+
+The simplest way to start a background process is to add an ampersand `&` at the end of the command.
 
 ```shell
-cal      # Display a calendar
-date     # Display the current date
+ls -l       # Command is started in the foreground.
+ls -l &     # Command is started in the background.
+```
+
+### Listing Running Processes
+
+```shell
+ps          # List all processes.
+ps -f       # List all processes with full information.
+```
+
+| Column | Description |
+| - | - |
+| UID | User ID that this process belongs to (the person running it) |
+| PID | Process ID |
+| PPID | Parent process ID (the ID of the process that started it) |
+| C | CPU utilization of process |
+| STIME | Process start time |
+| TTY | Terminal that process is running on |
+| TIME | Total CPU time consumed by process |
+| CMD | Command that process is running |
+
+| Option | Description |
+| - | - |
+| -a | Shows information about all users |
+| -x | Shows information about processes without terminals |
+| -u | Shows additional information like -f option |
+| -e | Displays extended information |
+
+### Stopping Processes
+
+Ending a process can be done in several different ways.
+
+From a console-based command, sending a `CTRL + C` keystroke (the default interrupt character) will exit the command. This works when the process is running in the foreground mode.
+
+If a process is running in the background, you should get its Job ID using the `ps` command. After that, you can use the kill command to kill the process as follows −
+
+```shell
+ps -f
+kill pid      # Kill the process with the given pid
+kill -9 pid   # Kill the process with the given pid and force it to exit
+```
+
+## Communication
+
+### Ping
+
+```shell
+ping hostname/ip-address
+# ping google.com
+# ping 142.250.204.78
+```
+
+The above command starts printing a response after every second. To come out of the command, you can terminate it by pressing `CTRL + C` keys.
+
+### FTP
+
+FTP stands for File Transfer Protocol. This utility helps you upload and download your file from one computer to another computer.
+
+```shell
+ftp hostname/ip-address
+```
+
+| Command | Description |
+| - | - |
+| `put filename` | Uploads filename from the local machine to the remote machine. |
+| `get filename` | Downloads filename from the remote machine to the local machine. |
+| `mput file list` | Uploads more than one file from the local machine to the remote machine. |
+| `mget file list` | Downloads more than one file from the remote machine to the local machine. |
+| `prompt off` | Turns the prompt off. By default, you will receive a prompt to upload or download files using mput or mget commands. |
+| `prompt on` | Turns the prompt on. |
+| `dir` | Lists all the files available in the current directory of the remote machine. |
+| `cd dirname` | Changes the current directory of the remote machine to dirname. |
+| `lcd` | Changes the current directory of the local machine to dirname. |
+| `quit` | Exits the FTP session. |
+
+### Telnet
+
+**Telnet** is a utility that allows a computer user at one site to make a connection, login and then conduct work on a computer at another site.
+
+```shell
+telnet hostname/ip-address
 ```
