@@ -635,8 +635,8 @@ ftp hostname/ip-address
 | - | - |
 | `put filename` | Uploads filename from the local machine to the remote machine. |
 | `get filename` | Downloads filename from the remote machine to the local machine. |
-| `mput file list` | Uploads more than one file from the local machine to the remote machine. |
-| `mget file list` | Downloads more than one file from the remote machine to the local machine. |
+| `mput filenames` | Uploads more than one file from the local machine to the remote machine. |
+| `mget filenames` | Downloads more than one file from the remote machine to the local machine. |
 | `prompt off` | Turns the prompt off. By default, you will receive a prompt to upload or download files using mput or mget commands. |
 | `prompt on` | Turns the prompt on. |
 | `dir` | Lists all the files available in the current directory of the remote machine. |
