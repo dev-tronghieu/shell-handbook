@@ -1,4 +1,4 @@
-# Unix Handbook <!-- omit in toc -->
+# Shell Handbook <!-- omit in toc -->
 
 ## Table of Contents <!-- omit in toc -->
 
